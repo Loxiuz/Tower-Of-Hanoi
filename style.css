@@ -1,0 +1,21 @@
+body {
+  background-color: grey;
+}
+
+#towers {
+  display: grid;
+  width: 25em;
+}
+
+.tower {
+  display: flex;
+  height: 200px;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.disk {
+  height: 20px;
+  background-color: orange;
+  border: 3px solid black;
+}
