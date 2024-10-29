@@ -1,13 +1,13 @@
 import Stack from "./stack.js";
 
 window.addEventListener("load", () => {
-  const controller = new Controller(3, 8);
+  const controller = new Controller(8);
   controller.init();
   window.controller = controller;
 });
 
 class Controller {
-  constructor(towerAmount, towerHeight) {
+  constructor(towerHeight = 4, towerAmount = 3) {
     this.towerAmount = towerAmount;
     this.towerHeight = towerHeight;
     this.towers = [];
