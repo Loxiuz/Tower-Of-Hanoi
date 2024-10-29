@@ -9,7 +9,6 @@ body {
 
 .tower {
   display: flex;
-  height: 200px;
   flex-direction: column-reverse;
   align-items: center;
 }

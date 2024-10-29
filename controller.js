@@ -41,8 +41,8 @@ class Controller {
 
   towerClicked(tower) {
     console.log(`Tower ${tower} clicked!`);
-
     if (this.clickedTower === 0) {
+      document.querySelector("#invalidMoveMsg").textContent = "---------------";
       document.querySelector("#towerFrom").textContent = "(click tower)";
       document.querySelector("#towerTo").textContent = "(click tower)";
       this.clickedTower = tower;
@@ -70,6 +70,7 @@ class Controller {
       return 1;
     } else {
       console.log("Invalid move");
+      document.querySelector("#invalidMoveMsg").textContent = "Invalid Move";
       this.displayBoard();
       return -1;
     }
@@ -77,6 +78,7 @@ class Controller {
 
   displayBoard() {
     document.querySelector("#game").innerHTML = `
+    <h3>Number of moves: <span id="moves">${this.moves}</span></h3>
     <div id="towers" style="grid-template-columns: repeat(${this.towerAmount}, 1fr)"></div>
     `;
     for (let i = 0; i < this.towerAmount; i++) {
@@ -84,7 +86,9 @@ class Controller {
         .querySelector("#towers")
         .insertAdjacentHTML(
           "beforeend",
-          `<div id="tower${i + 1}" class="tower"></div>`
+          `<div id="tower${i + 1}" class="tower" style="height: ${
+            this.towerHeight * 26
+          }px"></div>`
         );
       for (let j = this.towers[i].size() - 1; j >= 0; j--) {
         document
@@ -92,7 +96,7 @@ class Controller {
           .insertAdjacentHTML(
             "beforeend",
             `<div class="disk" style="width: ${
-              this.towers[i].get(j) + 3
+              this.towers[i].get(j) + 2
             }0px"></div>`
           );
       }
