@@ -13,7 +13,7 @@ class Controller {
     this.towers = [];
     this.moves = 0;
     this.clickedTower = 0; //latest tower clicked
-    //Storing bound function reference
+    //Bind class to relevant functions
     this.boundResetBtnClicked = this.resetBtnClicked.bind(this);
     this.boundTowerClicked = this.towerClicked.bind(this);
   }
