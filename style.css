@@ -13,6 +13,7 @@ body {
   align-items: center;
   border: 3px solid rgb(103, 97, 109);
   background-color: rgb(139, 133, 144);
+  cursor: pointer;
 }
 
 .disk {
