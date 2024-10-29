@@ -1,20 +1,33 @@
 body {
-  background-color: grey;
+  background-color: rgb(139, 133, 144);
 }
 
 #towers {
   display: grid;
-  width: 25em;
+  grid-column-gap: 3px;
 }
 
 .tower {
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
+  border: 3px solid rgb(103, 97, 109);
+  background-color: rgb(139, 133, 144);
 }
 
 .disk {
   height: 20px;
   background-color: orange;
   border: 3px solid black;
+}
+
+#resetBtn {
+  margin-top: 10px;
+  padding: 5px;
+  font-size: large;
+  background-color: rgb(103, 97, 109);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

@@ -12,12 +12,15 @@ class Controller {
     this.towerHeight = towerHeight;
     this.towers = [];
     this.moves = 0;
-    this.clickedTower = 0;
+    this.clickedTower = 0; //latest tower clicked
+    //Storing bound function reference
+    this.boundResetBtnClicked = this.resetBtnClicked.bind(this);
+    this.boundTowerClicked = this.towerClicked.bind(this);
   }
 
   init() {
     this.initTowers();
-    this.displayBoard();
+    this.display();
   }
 
   initTowers() {
@@ -30,23 +33,41 @@ class Controller {
     }
   }
 
-  eventListeners() {
+  addEventListeners() {
     for (let i = 1; i <= this.towerAmount; i++) {
-      document.querySelector(`#tower${i}`).addEventListener("click", (e) => {
-        e.preventDefault();
-        this.towerClicked(i);
-      });
+      const tower = document.querySelector(`#tower${i}`);
+      tower.removeEventListener("click", this.boundTowerClicked);
+      tower.addEventListener("click", this.boundTowerClicked);
     }
+    const resetBtn = document.querySelector("#resetBtn");
+    resetBtn.removeEventListener("click", this.boundResetBtnClicked);
+    resetBtn.addEventListener("click", this.boundResetBtnClicked);
   }
 
-  towerClicked(tower) {
+  resetBtnClicked(e) {
+    console.log("Reset button clicked");
+    e.preventDefault();
+    this.init();
+    this.moves = 0;
+    this.clickedTower = 0;
+    document.querySelector("#movingFeedback").innerHTML = "";
+    this.display();
+  }
+
+  //When you click a tower
+  towerClicked(e) {
+    e.preventDefault();
+    const tower = Number(e.currentTarget.value);
     console.log(`Tower ${tower} clicked!`);
     if (this.clickedTower === 0) {
-      document.querySelector("#invalidMoveMsg").textContent = "---------------";
+      document.querySelector("#movingFeedback").innerHTML = `
+      Moving disk from tower <span id="towerFrom">(click tower)</span> to tower
+      <span id="towerTo">(click tower)</span>
+      `;
       document.querySelector("#towerFrom").textContent = "(click tower)";
       document.querySelector("#towerTo").textContent = "(click tower)";
       this.clickedTower = tower;
-      document.querySelector("#towerFrom").textContent = tower;
+      document.querySelector("#towerFrom").textContent = this.clickedTower;
     } else {
       const prevClickedTower = this.clickedTower;
       this.clickedTower = tower;
@@ -56,39 +77,59 @@ class Controller {
     }
   }
 
+  handleGameOver() {
+    console.log("Game Won!");
+    for (let i = 1; i <= this.towerAmount; i++) {
+      const tower = document.querySelector(`#tower${i}`);
+      tower.removeEventListener("click", this.boundTowerClicked);
+    }
+    document.querySelector("#movingFeedback").textContent = "Game Won!";
+  }
+
+  #isGameOver() {
+    return this.towers[this.towerAmount - 1].size() === this.towerHeight;
+  }
+
   //"From" and "to" is the tower id
   moveTopDisk(from, to) {
     const towerFrom = this.towers[from - 1];
     const towerTo = this.towers[[to - 1]];
-    if (
-      towerFrom.peek() !== null &&
-      (towerTo.peek() === null || towerTo.peek() > towerFrom.peek())
-    ) {
+    if (this.#isValidMove(towerFrom, towerTo)) {
       towerTo.push(towerFrom.pop());
       this.moves++;
-      this.displayBoard();
-      return 1;
+      this.display();
+      if (this.#isGameOver()) {
+        this.handleGameOver();
+      }
     } else {
       console.log("Invalid move");
-      document.querySelector("#invalidMoveMsg").textContent = "Invalid Move";
-      this.displayBoard();
-      return -1;
+      document.querySelector("#movingFeedback").textContent = "Invalid Move";
+      this.display();
     }
   }
 
-  displayBoard() {
+  #isValidMove(towerFrom, towerTo) {
+    return (
+      towerFrom.peek() !== null &&
+      (towerTo.peek() === null || towerTo.peek() > towerFrom.peek())
+    );
+  }
+
+  display() {
     document.querySelector("#game").innerHTML = `
-    <h3>Number of moves: <span id="moves">${this.moves}</span></h3>
-    <div id="towers" style="grid-template-columns: repeat(${this.towerAmount}, 1fr)"></div>
+    <h3>Moves: <span id="moves">${this.moves}</span></h3>
+    <div id="towers" style="grid-template-columns: repeat(${
+      this.towerAmount
+    }, 1fr); width: ${(this.towerHeight + 5) * this.towerAmount}0px"></div>
     `;
     for (let i = 0; i < this.towerAmount; i++) {
       document
         .querySelector("#towers")
         .insertAdjacentHTML(
           "beforeend",
-          `<div id="tower${i + 1}" class="tower" style="height: ${
-            this.towerHeight * 26
-          }px"></div>`
+          `<button id="tower${i + 1}" class="tower" style="height: ${
+            this.towerHeight * 28
+          }px; width: ${this.towerHeight + 7}0px" value="${i + 1}"></button>`
         );
       for (let j = this.towers[i].size() - 1; j >= 0; j--) {
         document
@@ -96,11 +137,11 @@ class Controller {
           .insertAdjacentHTML(
             "beforeend",
             `<div class="disk" style="width: ${
-              this.towers[i].get(j) + 2
+              this.towers[i].get(j) + 5
             }0px"></div>`
           );
       }
     }
-    this.eventListeners();
+    this.addEventListeners();
   }
 }
