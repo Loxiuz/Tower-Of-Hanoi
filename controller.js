@@ -86,7 +86,7 @@ class Controller {
     document.querySelector("#movingFeedback").textContent = "Game Won!";
   }
 
-  #isGameOver() {
+  isGameOver() {
     return this.towers[this.towerAmount - 1].size() === this.towerHeight;
   }
 
@@ -94,11 +94,11 @@ class Controller {
   moveTopDisk(from, to) {
     const towerFrom = this.towers[from - 1];
     const towerTo = this.towers[[to - 1]];
-    if (this.#isValidMove(towerFrom, towerTo)) {
+    if (this.isValidMove(towerFrom, towerTo)) {
       towerTo.push(towerFrom.pop());
       this.moves++;
       this.display();
-      if (this.#isGameOver()) {
+      if (this.isGameOver()) {
         this.handleGameOver();
       }
     } else {
@@ -108,7 +108,7 @@ class Controller {
     }
   }
 
-  #isValidMove(towerFrom, towerTo) {
+  isValidMove(towerFrom, towerTo) {
     return (
       towerFrom.peek() !== null &&
       (towerTo.peek() === null || towerTo.peek() > towerFrom.peek())
