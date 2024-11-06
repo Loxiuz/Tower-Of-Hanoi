@@ -1,7 +1,7 @@
 import Stack from "./stack.js";
 
 window.addEventListener("load", () => {
-  const controller = new Controller(8, 200);
+  const controller = new Controller(8, 100);
   controller.init();
   window.controller = controller;
 });
